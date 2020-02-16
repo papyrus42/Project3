@@ -49,9 +49,9 @@ namespace MonoGameWindowsStarter
         Color color = Color.White;
 
         //might change depending on how big the frames are
-        Vector2 origin = new Vector2(10, 21);
+        Vector2 origin = new Vector2(19, 10);
 
-        public Vector2 Position;
+        public Vector2 Position = new Vector2(200,400);
 
         public int groundLevel;
 
@@ -115,26 +115,27 @@ namespace MonoGameWindowsStarter
                 jumping = true;
                 falling = false;
                 jumpTime += gameTime.ElapsedGameTime;
-                Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
+                //Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
+                Position.Y -= playerSpeed;
                 if (!soundHasPlayed)
                 {
-                    jumpSFX.Play();
+                    //jumpSFX.Play();
                     soundHasPlayed = false;
                 }
             }
-            else if (isOnPlatform)
-            {
-                jumping = false;
-                falling = false;
-                jumpTime = new TimeSpan(0);
-                soundHasPlayed = false;
-            }
-            else if(Position.Y < groundLevel)
-            {
-                falling = true;
-                jumping = false;
-                Position.Y += playerSpeed;
-            }
+            //else if (isOnPlatform)
+            //{
+            //    jumping = false;
+            //    falling = false;
+            //    jumpTime = new TimeSpan(0);
+            //    soundHasPlayed = false;
+            //}
+            //else if(Position.Y < groundLevel)
+            //{
+            //    falling = true;
+            //    jumping = false;
+            //    Position.Y += playerSpeed;
+            //}
             else
             {
                 jumping = false;
@@ -155,17 +156,17 @@ namespace MonoGameWindowsStarter
                     break;
                 case PlayerAnimState.JumpingLeft:
                     spriteEffects = SpriteEffects.FlipHorizontally;
-                    currentFrame = 7;
+                    currentFrame = 3;
                     break;
                 case PlayerAnimState.JumpingRight:
                     spriteEffects = SpriteEffects.None;
-                    currentFrame = 7;
+                    currentFrame = 3;
                     break;
                 case PlayerAnimState.WalkingLeft:
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     // Walking frames are 9 & 10
-                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 9;
+                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME+2;
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
                         animateTime = new TimeSpan(0);
@@ -175,7 +176,7 @@ namespace MonoGameWindowsStarter
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.None;
                     // Walking frames are 9 & 10
-                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 9;
+                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 2;
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
                         animateTime = new TimeSpan(0);
@@ -199,11 +200,11 @@ namespace MonoGameWindowsStarter
                         bounds.Y = 0;
                         Position.Y = 0;
                     }
-                    if (bounds.Y > groundLevel)
-                    {
-                        bounds.Y = groundLevel;
-                        Position.Y = groundLevel;
-                    }
+                    //if (bounds.Y > groundLevel)
+                    //{
+                    //    bounds.Y = groundLevel;
+                    //    Position.Y = groundLevel;
+                    //}
             
         }
 
