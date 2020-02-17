@@ -16,6 +16,10 @@ namespace MonoGameWindowsStarter
 
         private Texture2D texture;
 
+        public int Width => rect.Width;
+
+        public int Height => rect.Height;
+
         public Sprite(Rectangle sourceRect, Texture2D texture)
         {
             this.texture = texture;

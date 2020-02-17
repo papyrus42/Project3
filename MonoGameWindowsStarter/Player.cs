@@ -28,6 +28,7 @@ namespace MonoGameWindowsStarter
 
         const int JUMP_HEIGHT = 400;
 
+
         Sprite[] frames;
 
         int currentFrame = 0;
@@ -51,7 +52,7 @@ namespace MonoGameWindowsStarter
         //might change depending on how big the frames are
         Vector2 origin = new Vector2(19, 10);
 
-        public Vector2 Position = new Vector2(200,400);
+        public Vector2 Position = new Vector2(200,600);
 
         public int groundLevel;
 
@@ -61,14 +62,15 @@ namespace MonoGameWindowsStarter
 
         SoundEffect jumpSFX;
 
-        bool soundHasPlayed;
+        bool soundHasPlayed = false;
 
-        public bool isOnPlatform;
+        public bool isOnPlatform = false;
 
         public Player(IEnumerable<Sprite> frames, Game1 g)
         {
             this.frames = frames.ToArray();
             game = g;
+            bounds = new BoundaryRectangle(Position.X, Position.Y, this.frames[0].Width, this.frames[0].Height);
         }
 
         public void Initialize(float width, float height, float x, float y)
@@ -77,7 +79,7 @@ namespace MonoGameWindowsStarter
             bounds.Height = height;
             bounds.X = x;
             bounds.Y = y;
-            groundLevel = (int)(game.GraphicsDevice.Viewport.Height - bounds.Height);
+            groundLevel = 600;
             soundHasPlayed = false;
             isOnPlatform = false;
         }
@@ -110,39 +112,88 @@ namespace MonoGameWindowsStarter
             }
 
             //jumping and falling
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) && !falling && jumpTime.TotalMilliseconds <= JUMP_HEIGHT)
+            if (jumping)
             {
-                jumping = true;
-                falling = false;
                 jumpTime += gameTime.ElapsedGameTime;
-                //Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
-                Position.Y -= playerSpeed;
-                if (!soundHasPlayed)
+                // Simple jumping with platformer physics
+                Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
+                if (jumpTime.TotalMilliseconds >= JUMP_HEIGHT)
                 {
-                    //jumpSFX.Play();
-                    soundHasPlayed = false;
+                    jumping = false;
+                    falling = true;
                 }
             }
-            //else if (isOnPlatform)
-            //{
-            //    jumping = false;
-            //    falling = false;
-            //    jumpTime = new TimeSpan(0);
-            //    soundHasPlayed = false;
-            //}
-            //else if(Position.Y < groundLevel)
-            //{
-            //    falling = true;
-            //    jumping = false;
-            //    Position.Y += playerSpeed;
-            //}
-            else
+            if (falling)
+            {
+                Position.Y += playerSpeed;
+                // TODO: This needs to be replaced with collision logic
+                if (Position.Y > 400)
+                {
+                    Position.Y = 400;
+                    falling = false;
+                }
+            }
+            else if (isOnPlatform)
             {
                 jumping = false;
                 falling = false;
                 jumpTime = new TimeSpan(0);
                 soundHasPlayed = false;
             }
+            if (!jumping && !falling && keyboard.IsKeyDown(Keys.Up))
+            {
+                jumping = true;
+                jumpTime = new TimeSpan(0);
+                if (!soundHasPlayed)
+                {
+                    //jumpSFX.Play();
+                    soundHasPlayed = false;
+                }
+            }
+
+        
+
+
+
+            //if (Keyboard.GetState().IsKeyDown(Keys.Up) && !falling && jumpHeight <= JUMP_HEIGHT)
+            //{
+            //    jumping = true;
+            //    falling = false;
+            //    jumpHeight += playerSpeed;
+            //    //Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
+            //    Position.Y -= playerSpeed;
+            //    if (!soundHasPlayed)
+            //    {
+            //        //jumpSFX.Play();
+            //        soundHasPlayed = false;
+            //    }
+            //}
+            //else if (isOnPlatform)
+            //{
+            //    jumping = false;
+            //    falling = false;
+            //    jumpTime = new TimeSpan(0);
+            //    soundHasPlayed = false;
+            //    jumpHeight = 0;
+            //}
+            //else if(jumpHeight >= JUMP_HEIGHT)
+            //{
+            //    falling = true;
+            //    jumping = false;
+            //}
+            //if(falling)
+            //{
+            //    Position.Y += playerSpeed;
+            //    jumpHeight -= playerSpeed;
+            //}
+            //if(Position.Y <= groundLevel)
+            //{
+            //    jumping = false;
+            //    falling = false;
+            //    jumpTime = new TimeSpan(0);
+            //    soundHasPlayed = false;
+            //    jumpHeight = 0;
+            //}
 
             bounds.X = Position.X;
             bounds.Y = Position.Y;
@@ -212,5 +263,7 @@ namespace MonoGameWindowsStarter
         {
             frames[currentFrame].Draw(spriteBatch, Position, color, 0, origin, 2, spriteEffects, 1);
         }
+
+
     }
 }
