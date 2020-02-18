@@ -52,7 +52,7 @@ namespace MonoGameWindowsStarter
         //might change depending on how big the frames are
         Vector2 origin = new Vector2(19, 10);
 
-        public Vector2 Position = new Vector2(200,600);
+        public Vector2 Position = new Vector2(200,400);
 
         public int groundLevel;
 
@@ -73,20 +73,20 @@ namespace MonoGameWindowsStarter
             bounds = new BoundaryRectangle(Position.X, Position.Y, this.frames[0].Width, this.frames[0].Height);
         }
 
-        public void Initialize(float width, float height, float x, float y)
-        {
-            bounds.Width = width;
-            bounds.Height = height;
-            bounds.X = x;
-            bounds.Y = y;
-            groundLevel = 600;
-            soundHasPlayed = false;
-            isOnPlatform = false;
-        }
+        //public void Initialize(float width, float height, float x, float y)
+        //{
+        //    bounds.Width = width;
+        //    bounds.Height = height;
+        //    bounds.X = x;
+        //    bounds.Y = y;
+        //    groundLevel = 600;
+        //    soundHasPlayed = false;
+        //    isOnPlatform = false;
+        //}
 
         public void LoadContent(ContentManager cm, string name)
         {
-           // jumpSFX = cm.Load<SoundEffect>("jumpSound");
+           jumpSFX = cm.Load<SoundEffect>("JumpSound");
         }
 
         public void Update(GameTime gameTime)
@@ -146,7 +146,7 @@ namespace MonoGameWindowsStarter
                 jumpTime = new TimeSpan(0);
                 if (!soundHasPlayed)
                 {
-                    //jumpSFX.Play();
+                    jumpSFX.Play();
                     soundHasPlayed = false;
                 }
             }

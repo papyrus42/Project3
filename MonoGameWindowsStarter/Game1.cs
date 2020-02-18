@@ -48,6 +48,7 @@ namespace MonoGameWindowsStarter
 
             var playerFrames = from index in Enumerable.Range(0, 5) select sheet[index];
             player = new Player(playerFrames, this);
+            player.LoadContent(Content, "");
 
             // TODO: use this.Content to load your game content here
         }

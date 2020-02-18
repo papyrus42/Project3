@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin JumpSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:JumpSound.wav
+
 #begin smallerSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
