@@ -217,21 +217,23 @@ namespace MonoGameWindowsStarter
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     // Walking frames are 9 & 10
-                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME+2;
+                    
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
                         animateTime = new TimeSpan(0);
                     }
+                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 2;
                     break;
                 case PlayerAnimState.WalkingRight:
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.None;
                     // Walking frames are 9 & 10
-                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 2;
+                    
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
                         animateTime = new TimeSpan(0);
                     }
+                    currentFrame = (int)animateTime.TotalMilliseconds / FRAME + 2;
                     break;
             }
 

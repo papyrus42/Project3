@@ -43,7 +43,7 @@ namespace MonoGameWindowsStarter
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var t = Content.Load<Texture2D>("test");
+            var t = Content.Load<Texture2D>("Sprite Sheet");
             sheet = new SpriteSheet(t, 31, 35, 3, 2);
 
             var playerFrames = from index in Enumerable.Range(0, 5) select sheet[index];

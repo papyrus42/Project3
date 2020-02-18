@@ -31,6 +31,18 @@
 /processorParam:TextureFormat=Color
 /build:smallerSprite.png
 
+#begin Sprite Sheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=154,141,224,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprite Sheet.png
+
 #begin spriteSheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
