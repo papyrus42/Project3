@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MonoGameWindowsStarter
@@ -14,11 +15,16 @@ namespace MonoGameWindowsStarter
         SpriteBatch spriteBatch;
         SpriteSheet sheet;
         Player player;
+        List<Platform> platforms;
+        AxisList gameWorld;
+        List<GameObject> gameObjects;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            platforms = new List<Platform>();
+            gameObjects = new List<GameObject>();
         }
 
         /// <summary>
@@ -30,7 +36,7 @@ namespace MonoGameWindowsStarter
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //player.Initialize(20, 20, 0, 700);
+
             base.Initialize();
         }
 
@@ -49,7 +55,22 @@ namespace MonoGameWindowsStarter
             var playerFrames = from index in Enumerable.Range(0, 5) select sheet[index];
             player = new Player(playerFrames, this);
             player.LoadContent(Content, "");
+            
 
+            platforms.Add(new Platform(new BoundaryRectangle(80, 350, 105, 21), sheet[7]));
+            platforms.Add(new Platform(new BoundaryRectangle(180,290,105,21), sheet[6]));
+            platforms.Add(new Platform(new BoundaryRectangle(230,220,105,21), sheet[7]));
+            platforms.Add(new Platform(new BoundaryRectangle(390, 300, 105, 21), sheet[6]));
+            platforms.Add(new Platform(new BoundaryRectangle(490, 230, 105, 21), sheet[7]));
+            platforms.Add(new Platform(new BoundaryRectangle(600, 160, 105, 21), sheet[6]));
+
+            gameWorld = new AxisList();
+            foreach (Platform platform in platforms)
+            {
+                gameWorld.AddGameObject(platform);
+                gameObjects.Add(platform);
+            }
+            gameObjects.Add(player);
             // TODO: use this.Content to load your game content here
         }
 
@@ -71,8 +92,14 @@ namespace MonoGameWindowsStarter
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            player.Update(gameTime);
-            // TODO: Add your update logic here
+            foreach(GameObject gm in gameObjects)
+            {
+                gm.Update(gameTime);
+            }
+
+
+            var platformQuery = gameWorld.QueryRange(player.bounds.X, player.bounds.X + player.bounds.Width);
+            player.CheckForPlatformCollision(platformQuery);
 
             base.Update(gameTime);
         }
@@ -89,7 +116,11 @@ namespace MonoGameWindowsStarter
 
             spriteBatch.Begin();
 
-            player.Draw(spriteBatch);
+            gameObjects.ForEach(obj =>
+            {
+                obj.Draw(spriteBatch);
+            });
+
 
             spriteBatch.End();
 

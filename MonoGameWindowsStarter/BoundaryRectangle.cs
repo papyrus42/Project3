@@ -34,6 +34,13 @@ namespace MonoGameWindowsStarter
                 (int)br.Height);
         }
 
+        public BoundaryRectangle(Vector2 position, float width, float height)
+        {
+            X = position.X;
+            Y = position.Y;
+            Width = width;
+            Height = height;
+        }
 
     }
 }

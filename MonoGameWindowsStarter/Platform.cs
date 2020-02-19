@@ -8,14 +8,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameWindowsStarter
 {
-    public class Platform
+    public class Platform : IBoundable, GameObject
     {
-        public BoundaryRectangle bounds;
+        BoundaryRectangle bounds;
 
         Sprite sprite;
 
         int tileCount;
 
+        public BoundaryRectangle Bounds => bounds;
 
         public Platform(BoundaryRectangle br, Sprite s)
         {
@@ -32,5 +33,9 @@ namespace MonoGameWindowsStarter
             }
         }
 
+        public void Update(GameTime gameTime)
+        {
+
+        }
     }
 }

@@ -22,7 +22,14 @@ namespace MonoGameWindowsStarter
         FallingRight
     }
 
-    public class Player
+    enum VerticalMovementState
+    {
+        OnGround,
+        Jumping,
+        Falling
+    }
+
+    public class Player: GameObject
     {
         const int FRAME = 300;
 
@@ -34,6 +41,8 @@ namespace MonoGameWindowsStarter
         int currentFrame = 0;
 
         PlayerAnimState animationState = PlayerAnimState.Idle;
+
+        VerticalMovementState verticalState = VerticalMovementState.OnGround;
 
         int playerSpeed = 3;
 
@@ -70,7 +79,7 @@ namespace MonoGameWindowsStarter
         {
             this.frames = frames.ToArray();
             game = g;
-            bounds = new BoundaryRectangle(Position.X, Position.Y, this.frames[0].Width, this.frames[0].Height);
+            bounds = new BoundaryRectangle(Position-1.8f * origin, this.frames[0].Width, this.frames[0].Height);
         }
 
         //public void Initialize(float width, float height, float x, float y)
@@ -121,6 +130,7 @@ namespace MonoGameWindowsStarter
                 {
                     jumping = false;
                     falling = true;
+                    verticalState = VerticalMovementState.Falling;
                 }
             }
             if (falling)
@@ -131,19 +141,15 @@ namespace MonoGameWindowsStarter
                 {
                     Position.Y = 400;
                     falling = false;
+                    verticalState = VerticalMovementState.OnGround;
                 }
             }
-            else if (isOnPlatform)
-            {
-                jumping = false;
-                falling = false;
-                jumpTime = new TimeSpan(0);
-                soundHasPlayed = false;
-            }
+
             if (!jumping && !falling && keyboard.IsKeyDown(Keys.Up))
             {
                 jumping = true;
                 jumpTime = new TimeSpan(0);
+                verticalState = VerticalMovementState.Jumping;
                 if (!soundHasPlayed)
                 {
                     jumpSFX.Play();
@@ -154,47 +160,6 @@ namespace MonoGameWindowsStarter
         
 
 
-
-            //if (Keyboard.GetState().IsKeyDown(Keys.Up) && !falling && jumpHeight <= JUMP_HEIGHT)
-            //{
-            //    jumping = true;
-            //    falling = false;
-            //    jumpHeight += playerSpeed;
-            //    //Position.Y -= (250 / (float)jumpTime.TotalMilliseconds);
-            //    Position.Y -= playerSpeed;
-            //    if (!soundHasPlayed)
-            //    {
-            //        //jumpSFX.Play();
-            //        soundHasPlayed = false;
-            //    }
-            //}
-            //else if (isOnPlatform)
-            //{
-            //    jumping = false;
-            //    falling = false;
-            //    jumpTime = new TimeSpan(0);
-            //    soundHasPlayed = false;
-            //    jumpHeight = 0;
-            //}
-            //else if(jumpHeight >= JUMP_HEIGHT)
-            //{
-            //    falling = true;
-            //    jumping = false;
-            //}
-            //if(falling)
-            //{
-            //    Position.Y += playerSpeed;
-            //    jumpHeight -= playerSpeed;
-            //}
-            //if(Position.Y <= groundLevel)
-            //{
-            //    jumping = false;
-            //    falling = false;
-            //    jumpTime = new TimeSpan(0);
-            //    soundHasPlayed = false;
-            //    jumpHeight = 0;
-            //}
-
             bounds.X = Position.X;
             bounds.Y = Position.Y;
 
@@ -202,8 +167,15 @@ namespace MonoGameWindowsStarter
             switch (animationState)
             {
                 case PlayerAnimState.Idle:
-                    currentFrame = 0;
-                    animateTime = new TimeSpan(0);
+                    if (falling)
+                    {
+                        currentFrame = 4;
+                    }
+                    else
+                    {
+                        currentFrame = 0;
+                        animateTime = new TimeSpan(0);
+                    }
                     break;
                 case PlayerAnimState.JumpingLeft:
                     spriteEffects = SpriteEffects.FlipHorizontally;
@@ -261,9 +233,29 @@ namespace MonoGameWindowsStarter
             
         }
 
+        public void CheckForPlatformCollision(IEnumerable<IBoundable> platforms)
+        {
+
+            if (verticalState != VerticalMovementState.Jumping)
+            {
+                verticalState = VerticalMovementState.Falling;
+                falling = true;
+                foreach (Platform platform in platforms)
+                {
+                    if (bounds.CollidesWith(platform.Bounds))
+                    {
+                        Position.Y = platform.Bounds.Y - 1;
+                        verticalState = VerticalMovementState.OnGround;
+                        jumping = false;
+                        falling = false;
+                    }
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            frames[currentFrame].Draw(spriteBatch, Position, color, 0, origin, 2, spriteEffects, 1);
+            frames[currentFrame].Draw(spriteBatch, Position, color, 0, origin, (float)1.3, spriteEffects, 1);
         }
 
 
