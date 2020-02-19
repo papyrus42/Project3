@@ -167,15 +167,10 @@ namespace MonoGameWindowsStarter
             switch (animationState)
             {
                 case PlayerAnimState.Idle:
-                    if (falling)
-                    {
-                        currentFrame = 4;
-                    }
-                    else
-                    {
+                    
                         currentFrame = 0;
                         animateTime = new TimeSpan(0);
-                    }
+                    
                     break;
                 case PlayerAnimState.JumpingLeft:
                     spriteEffects = SpriteEffects.FlipHorizontally;
@@ -188,7 +183,6 @@ namespace MonoGameWindowsStarter
                 case PlayerAnimState.WalkingLeft:
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.FlipHorizontally;
-                    // Walking frames are 9 & 10
                     
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
@@ -199,7 +193,6 @@ namespace MonoGameWindowsStarter
                 case PlayerAnimState.WalkingRight:
                     animateTime += gameTime.ElapsedGameTime;
                     spriteEffects = SpriteEffects.None;
-                    // Walking frames are 9 & 10
                     
                     if (animateTime.TotalMilliseconds > FRAME * 2)
                     {
@@ -238,8 +231,12 @@ namespace MonoGameWindowsStarter
 
             if (verticalState != VerticalMovementState.Jumping)
             {
+                if (verticalState != VerticalMovementState.OnGround)
+                {
+                    falling = true;
+                }
                 verticalState = VerticalMovementState.Falling;
-                falling = true;
+               
                 foreach (Platform platform in platforms)
                 {
                     if (bounds.CollidesWith(platform.Bounds))
