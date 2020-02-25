@@ -114,12 +114,17 @@ namespace MonoGameWindowsStarter
 
             // TODO: Add your drawing code here
 
-            spriteBatch.Begin();
+            var offset = new Vector2(200, 300) - player.Position;
+            var t = Matrix.CreateTranslation(offset.X, offset.Y, 0);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, t);
 
-            gameObjects.ForEach(obj =>
+            var platformQuery = gameWorld.QueryRange(player.Position.X - 221, player.Position.X + 400);
+            foreach (Platform platform in platformQuery)
             {
-                obj.Draw(spriteBatch);
-            });
+                platform.Draw(spriteBatch);
+            }
+
+            player.Draw(spriteBatch);
 
 
             spriteBatch.End();
